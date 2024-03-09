@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 
 class SimulatedAnnealing:
     def __init__(self, tsp_instance, initial_temperature=1000, cooling_rate=0.995, num_iterations=1000):
@@ -9,6 +10,7 @@ class SimulatedAnnealing:
         self.num_iterations = num_iterations
         self.current_solution = None
         self.best_solution = None
+        self.costsList = []
 
     def generate_new_solution(self):
         # Generate a new solution by swapping two cities in the current solution
@@ -25,6 +27,9 @@ class SimulatedAnnealing:
         self.current_solution = initial_solution if initial_solution is not None else self.tsp_instance.solutionGen()
         self.best_solution = self.current_solution
 
+        # Initialize a list to store the cost at each iteration
+        costs = []
+
         start_time = time.time()
 
         for _ in range(self.num_iterations):
@@ -40,6 +45,22 @@ class SimulatedAnnealing:
                 self.current_solution = new_solution
                 if new_cost < self.evaluate_solution(self.best_solution):
                     self.best_solution = new_solution
+
+            # Save the cost of the current solution
+            costs.append(self.evaluate_solution(self.current_solution))
+
             self.temperature *= self.cooling_rate
 
+        # Update costsList property with the costs
+        self.costsList = costs
+
         return self.best_solution
+
+
+    def plot_costs(self):
+        plt.figure()
+        plt.plot(self.costsList)
+        plt.title('Costs over time')
+        plt.xlabel('Iteration')
+        plt.ylabel('Cost')
+        plt.show()
