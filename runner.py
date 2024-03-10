@@ -1,17 +1,28 @@
+from src.greedy import GreedyAlgorithm
 from src.tspInstance import tspInstance
-from src.simulatedAnnealing import SimulatedAnnealing
+from src.greedyEuclid import GreedyEuclid
 
-tspNonEu = tspInstance()
-tspNonEu.reader('C:\\Users\\Conor King\\Documents\\School\\EEC 289Q\\TSP\\TSP\\data\\1000_euclidianDistance.txt')
+tsp = tspInstance()
+tsp.reader('C:\\Users\\Conor King\\Documents\\School\\EEC 289Q\\TSP\\TSP\\data\\1000_euclidianDistance.txt') 
 
-initialSol = tspNonEu.solutionGen()
-initialCost = tspNonEu.solutionCheck(initialSol)
-print(initialCost)
+# Define the number of clusters for the GreedyEuclid algorithm
+n_clusters = 10  # Adjust this value based on your specific use case
 
-sa = SimulatedAnnealing(tspNonEu,cooling_rate=0.995,num_iterations=1000)
-best_solution, costs = sa.run()
-#print(best_solution)
+# Create a GreedyEuclid object
+greedy_euclid = GreedyEuclid(tsp, n_clusters)
 
-cost = tspNonEu.solutionCheck(best_solution)
-print(cost)
-sa.plot_costs(costs)
+# Run the GreedyEuclid algorithm
+cluster_solutions = greedy_euclid.run()
+
+# Link the clusters together
+cluster_order = greedy_euclid.link_clusters()
+
+# Get the overall solution
+overall_solution = greedy_euclid.get_overall_solution(cluster_order)
+
+# Print the overall solution
+print(overall_solution)
+
+# Check the total distance of the overall solution
+total_distance = tsp.solutionCheck(overall_solution)
+print(f'Total distance: {total_distance}')

@@ -10,7 +10,6 @@ class SimulatedAnnealing:
         self.num_iterations = num_iterations
         self.current_solution = None
         self.best_solution = None
-        self.costsList = []
 
     def generate_new_solution(self):
         # Generate a new solution by swapping two cities in the current solution
@@ -51,15 +50,11 @@ class SimulatedAnnealing:
 
             self.temperature *= self.cooling_rate
 
-        # Update costsList property with the costs
-        self.costsList = costs
+        return self.best_solution, costs
 
-        return self.best_solution
-
-
-    def plot_costs(self):
+    def plot_costs(self, costs):
         plt.figure()
-        plt.plot(self.costsList)
+        plt.plot(costs)
         plt.title('Costs over time')
         plt.xlabel('Iteration')
         plt.ylabel('Cost')
