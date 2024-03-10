@@ -8,6 +8,8 @@ class Greedy2OptMove:
         # Copy the initial solution
         solution = initial_solution.copy()
 
+        cyclesVisited = 0
+
         # Initialize a variable to keep track of improvements
         improvement = True
 
@@ -19,6 +21,8 @@ class Greedy2OptMove:
             # Iterate over pairs of indices (i, j) with i < j
             for i in range(len(solution) - 1):
                 for j in range(i + 2, len(solution) + (i != 0)):
+                    cyclesVisited += 1
+                    
                     # Calculate the change in distance if we reverse the subpath from i to j
                     old_distance = self.tsp_instance.graph[solution[i - 1]][solution[i]] + self.tsp_instance.graph[solution[j - 1]][solution[j % len(solution)]]
                     new_distance = self.tsp_instance.graph[solution[i - 1]][solution[j - 1]] + self.tsp_instance.graph[solution[i]][solution[j % len(solution)]]
@@ -28,4 +32,4 @@ class Greedy2OptMove:
                         solution[i:j] = reversed(solution[i:j])
                         improvement = True
 
-        return solution
+        return solution, cyclesVisited
